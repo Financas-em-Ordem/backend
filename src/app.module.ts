@@ -5,11 +5,17 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DespesaModule } from './despesa/despesa.module';
 import { TipoDespesaModule } from './tipo_despesa/tipo_despesa.module';
+import { UsuarioModule } from './usuario/usuario.module';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
     DespesaModule,
+    UsuarioModule,
     TipoDespesaModule,
+    AuthModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -22,6 +28,12 @@ import { TipoDespesaModule } from './tipo_despesa/tipo_despesa.module';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

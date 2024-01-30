@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
-import { TipoDespesaEntity } from "./tipo_despesa.entity";
+import { TipoDespesa } from "./tipo_despesa.entity";
 import { TipoDespesaService } from "./tipo_despesa.service";
 import { TipoDespesaDto } from "./dto/tipo_despesa.dto";
 
@@ -8,7 +8,7 @@ export class TipoDespesaContoller{
     constructor(private readonly tipoDespesaService: TipoDespesaService){}
 
     @Get("listar")
-    async listar(): Promise<TipoDespesaEntity[]>{
+    async listar(): Promise<TipoDespesa[]>{
         return this.tipoDespesaService.listar();
     }
 

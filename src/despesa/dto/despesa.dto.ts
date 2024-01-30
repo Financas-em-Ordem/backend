@@ -1,7 +1,8 @@
-import { IsNotEmpty, IsNumber} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString} from 'class-validator';
 
 export class DespesaDto {
     @IsNotEmpty({ message: 'Descriçao não pode ser vazio' })
+    @IsString()
     descricao: string;
 
     @IsNotEmpty({ message: 'Data não pode ser vazio' })
@@ -10,8 +11,8 @@ export class DespesaDto {
     @IsNotEmpty({ message: 'Descriçao não pode ser vazio' })
     @IsNumber()
     valor: number
-
-    @IsNotEmpty({ message: 'Tipo de despesa não pode ser vazio' })
+    
     tipoDespesaId: number
 
+    usuarioId: number
 }
