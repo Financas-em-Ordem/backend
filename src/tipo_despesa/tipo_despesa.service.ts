@@ -1,17 +1,17 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { TipoDespesaEntity } from './tipo_despesa.entity';
+import { TipoDespesa } from './tipo_despesa.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TipoDespesaDto } from './dto/tipo_despesa.dto';
 
 @Injectable()
 export class TipoDespesaService {
     constructor(
-        @InjectRepository(TipoDespesaEntity)
-        private readonly tipoDespesaRepository: Repository<TipoDespesaEntity>,
+        @InjectRepository(TipoDespesa)
+        private readonly tipoDespesaRepository: Repository<TipoDespesa>,
     ) { }
     
-    async listar(): Promise<TipoDespesaEntity[]>{
+    async listar(): Promise<TipoDespesa[]>{
         return this.tipoDespesaRepository.find();
     }
 

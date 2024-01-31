@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DespesaService } from './despesa.service';
-import { DespesaEntity } from './despesa.entity';
+import { Despesa } from './despesa.entity';
 import { DespesaContoller } from './despesa.controller';
-import { TipoDespesaEntity } from 'src/tipo_despesa/tipo_despesa.entity';
+import { TipoDespesa } from 'src/tipo_despesa/tipo_despesa.entity';
+import { Usuario } from 'src/usuario/usuario.entity';
 
 @Module({
-  imports: [ TypeOrmModule.forFeature([DespesaEntity, TipoDespesaEntity])],
+  imports: [ TypeOrmModule.forFeature([Despesa, TipoDespesa, Usuario])],
   controllers: [DespesaContoller],
   providers: [
     DespesaService,

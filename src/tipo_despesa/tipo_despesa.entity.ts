@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { DespesaEntity } from 'src/despesa/despesa.entity';
+import { Despesa } from 'src/despesa/despesa.entity';
 
 @Entity()
-export class TipoDespesaEntity {
+export class TipoDespesa {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -12,6 +12,6 @@ export class TipoDespesaEntity {
     @Column()
     percentual_salario: number
 
-    @OneToMany(() => DespesaEntity, despesa => despesa.tipoDespesa)
-    despesas: DespesaEntity[];
+    @OneToMany(() => Despesa, despesa => despesa.tipoDespesa)
+    despesas: Despesa[];
 }
