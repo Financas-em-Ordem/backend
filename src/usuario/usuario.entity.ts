@@ -19,8 +19,10 @@ export class Usuario {
     cpf: string
 
     @Column()
-    senha: string
+    salario: number 
 
+    @Column()
+    senha: string
 
     @OneToMany(() => Despesa, (despesa) => despesa.usuario)
     despesas: Despesa[]

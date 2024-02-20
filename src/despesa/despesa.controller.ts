@@ -2,34 +2,72 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/commo
 import { Despesa } from "./despesa.entity";
 import { DespesaService } from "./despesa.service";
 import { DespesaDto } from "./dto/despesa.dto";
+import { DespesaPaginacaoDTO } from "./dto/despesa-paginacao.dto";
+import { DespesaEdicaoDto } from "./dto/despesa-edicao.dto";
+import { IsPublic } from "src/auth/decorators/is-public.decorator";
+import { DespesaTipoPaginacaoDTO } from "./dto/despesa-tipo-paginacao.dto";
+import { DespesasDatasDTO } from "./dto/despesas-datas-dto";
 
 @Controller('despesa')
-export class DespesaContoller{
-    constructor(private readonly despesaService: DespesaService){}
+export class DespesaContoller {
+    constructor(private readonly despesaService: DespesaService) { }
 
     @Get('listar')
-    async listar(): Promise<Despesa[]>{
+    async listar(): Promise<Despesa[]> {
         return this.despesaService.findAll()
     }
 
     @Get('usuario/:id')
-    async listarPorUsuario(@Param("id") id: number): Promise<Despesa[]>{
+    async listarPorUsuario(@Param("id") id: number): Promise<Despesa[]> {
         return this.despesaService.listarDespesasUsuario(id)
     }
 
     @Post('salvar')
-    async salvarDespesa(@Body() despesa: DespesaDto): Promise<Despesa>{
+    async salvarDespesa(@Body() despesa: DespesaDto): Promise<Despesa> {
 
         return this.despesaService.salvarDespesa(despesa);
     }
 
+    @Post('salvu98jik ')
+    async salvarVariasDespesas(@Body() despesas: DespesaDto[]) {
+        return this.despesaService.salvarVarias(despesas)
+    }
     @Delete("deletar/:id")
-    async deletarDespesa(@Param("id") id: number): Promise<string>{
+    async deletarDespesa(@Param("id") id: number): Promise<string> {
         return this.despesaService.deletarDespesa(id);
     }
 
-    @Patch("atualizar/:id")
-    async atualizarDespesa(@Param("id") id: number, @Body() despesa: DespesaDto){
-        return this.despesaService.atualizarDespesa(id, despesa)
+    @Patch("atualizar")
+    async atualizarDespesa(@Body() despesa: DespesaEdicaoDto) {
+        return this.despesaService.atualizarDespesa(despesa)
+    }
+
+    @Post("listar-periodo-anual")
+    async listarPorPeriodoAnual(@Body() dados) {
+        console.log(dados)
+        return this.despesaService.getDespesasNoPeriodoAnual(dados.usuarioId, dados.data_inicial, dados.data_final)
+    }
+
+    @Post("listar-periodo/:id")
+    async listarPorPeriodo(@Param("id") idUser:number, @Body() paginacaoDTO: DespesaPaginacaoDTO) {
+        console.log(paginacaoDTO)
+        return this.despesaService.getDespesasPeriodoPaginacao(idUser, paginacaoDTO)
+    }
+
+    @Get("listar-dez-ultimas/:id")
+    async listarDezUltimas(@Param("id") id: number): Promise<Despesa[]> {
+        return this.despesaService.listarUltimasDezDespesas(id);
+    }
+
+    @Post("despesas-tipo/:id")
+    async falmengo(@Param("id") idUser : number, @Body() periodo: DespesasDatasDTO) {
+        console.log(periodo)
+        return this.despesaService.getValorTotalDespesasPorTipo(idUser,  periodo)
+    }
+
+    @Post('listar-tipo/:id')
+    async listarTipo(@Param("id") id : number, @Body() paginacaoDTO: DespesaTipoPaginacaoDTO){
+
+        return this.despesaService.getDespesasTipo(id, paginacaoDTO)
     }
 }
