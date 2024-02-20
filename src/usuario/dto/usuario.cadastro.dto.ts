@@ -17,6 +17,9 @@ export class UsuarioCadsatroDto {
     @IsString()
     cpf: string
 
+    @IsNotEmpty({message: "O salario não pode estar vazio"})
+    salario: number
+
     @IsNotEmpty({message: 'A senha não pode estar vazia'})
     @IsString()
     senha: string

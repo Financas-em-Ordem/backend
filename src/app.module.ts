@@ -9,6 +9,7 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -16,13 +17,16 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     UsuarioModule,
     TipoDespesaModule,
     AuthModule,
+    ConfigModule.forRoot({
+      envFilePath: '.env'
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'bd_financas_ordem',
+      host: process.env.DATABASE_HOST,
+      port: +process.env.DATABASE_PORT,
+      username: process.env.DATABASE_USER,
+      password:  process.env.DATABASE_PASSWORD,
+      database:  process.env.DATABASE_DBNAME,
       autoLoadEntities: true,
       synchronize: true,
     }),

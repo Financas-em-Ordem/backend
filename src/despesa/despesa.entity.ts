@@ -13,7 +13,7 @@ export class Despesa {
     @Column()
     data: string
 
-    @Column()
+    @Column('decimal', {precision: 10, scale: 2})
     valor: number
 
     @ManyToOne(() => TipoDespesa, (tipo) => tipo.despesas, {

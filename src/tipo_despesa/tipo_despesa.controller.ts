@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/commo
 import { TipoDespesa } from "./tipo_despesa.entity";
 import { TipoDespesaService } from "./tipo_despesa.service";
 import { TipoDespesaDto } from "./dto/tipo_despesa.dto";
+import { IsPublic } from "src/auth/decorators/is-public.decorator";
+import { TipoDespesaEdicaoDto } from "./dto/tipo_despesa_editar.dto";
 
 @Controller('tipo_despesa')
 export class TipoDespesaContoller{
@@ -11,19 +13,24 @@ export class TipoDespesaContoller{
     async listar(): Promise<TipoDespesa[]>{
         return this.tipoDespesaService.listar();
     }
-
+    @IsPublic()
     @Post()
     async salvar(@Body() tipo_despesa: TipoDespesaDto): Promise<TipoDespesaDto>{
         return this.tipoDespesaService.salvar(tipo_despesa)
     }
 
+    @IsPublic()
+    @Post('varios')
+    async salvarVarios(@Body() tipos_despesa: TipoDespesa[]){
+        return this.tipoDespesaService.salvarVarias(tipos_despesa)
+    }
     @Delete(":id")
     async deletarDespesa(@Param("id") id: number): Promise<string>{
         return this.tipoDespesaService.deletarDespesa(id);
     }
 
-    @Patch(":id")
-    async atualizarDespesa(@Param("id") id: number, @Body() despesa: TipoDespesaDto){
-        return this.tipoDespesaService.atualizarDespesa(id, despesa)
+    @Patch()
+    async atualizarDespesa(@Body() despesa: TipoDespesaEdicaoDto){
+        return this.tipoDespesaService.atualizarDespesa(despesa)
     }
 }

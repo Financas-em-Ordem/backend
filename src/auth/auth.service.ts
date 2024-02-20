@@ -18,10 +18,8 @@ export class AuthService {
             const validaSenha = await bcrypt.compare(senha, usuario.senha);
 
             if(validaSenha){
-
-
                 return {
-                    access_token: this.jwtService.sign({email: usuario.email, nome_completo: usuario.nome_completo}),
+                    access_token: this.jwtService.sign({id: usuario.id, email: usuario.email, nome_completo: usuario.nome_completo, salario: usuario.salario}),
                     message: "usuário logado com sucesso"
                 }
 
