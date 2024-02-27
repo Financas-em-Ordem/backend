@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Between, Repository } from 'typeorm';
+import { Between, In, Repository } from 'typeorm';
 import { Despesa } from './despesa.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DespesaDto } from './dto/despesa.dto';
@@ -9,6 +9,7 @@ import { Usuario } from 'src/usuario/usuario.entity';
 import { DespesaEdicaoDto } from './dto/despesa-edicao.dto';
 import { DespesaTipoPaginacaoDTO } from './dto/despesa-tipo-paginacao.dto';
 import { DespesasDatasDTO } from './dto/despesas-datas-dto';
+import { DespesaPersonalizadaDTO } from './dto/despesa-personalizada.dto';
 
 @Injectable()
 export class DespesaService {
@@ -183,5 +184,43 @@ export class DespesaService {
     const itensProxPagina = qtdDespesas > ((paginacaoDTO.pagina - 1) * paginacaoDTO.itens_pagina) + paginacaoDTO.itens_pagina;
 
     return {itensProxPagina, despesas}
+  }
+
+
+  async getDespesasTipoPersonalizada(id: number, despesaDTO: DespesaPersonalizadaDTO){
+
+    const qtdDespesas = await this.despesaRepository
+      .count({
+        where: {
+          usuario: {
+            id: id
+          },
+          tipoDespesa: {
+            id: In(despesaDTO.tiposId),
+          },
+          data: Between(despesaDTO.data_inicial, despesaDTO.data_final)
+        }
+      })
+    const despesas = await this.despesaRepository
+      .find({
+        where: {
+          usuario: {
+            id: id
+          },
+          tipoDespesa: {
+            id: In(despesaDTO.tiposId)
+          },
+          data: Between(despesaDTO.data_inicial, despesaDTO.data_final)
+        },
+        skip: (despesaDTO.pagina - 1) * despesaDTO.itens_pagina,
+        take: despesaDTO.itens_pagina,
+        order: {
+          data: 'DESC'
+        }
+      })
+
+    const itensProxPagina = qtdDespesas > ((despesaDTO.pagina - 1) * despesaDTO.itens_pagina) + despesaDTO.itens_pagina;
+
+    return {qtdDespesas, itensProxPagina, despesas}
   }
 }
