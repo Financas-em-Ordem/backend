@@ -7,6 +7,7 @@ import { DespesaEdicaoDto } from "./dto/despesa-edicao.dto";
 import { IsPublic } from "src/auth/decorators/is-public.decorator";
 import { DespesaTipoPaginacaoDTO } from "./dto/despesa-tipo-paginacao.dto";
 import { DespesasDatasDTO } from "./dto/despesas-datas-dto";
+import { DespesaPersonalizadaDTO } from "./dto/despesa-personalizada.dto";
 
 @Controller('despesa')
 export class DespesaContoller {
@@ -69,5 +70,11 @@ export class DespesaContoller {
     async listarTipo(@Param("id") id : number, @Body() paginacaoDTO: DespesaTipoPaginacaoDTO){
 
         return this.despesaService.getDespesasTipo(id, paginacaoDTO)
+    }
+
+    @Post('listagem-personalizada/:id')
+    async listagemPersonalizada(@Param('id') idUser: number, @Body() despesaDTO: DespesaPersonalizadaDTO){
+        console.log(despesaDTO)
+        return this.despesaService.getDespesasTipoPersonalizada(idUser, despesaDTO)
     }
 }
