@@ -22,12 +22,8 @@ async function bootstrap() {
     return await fn(req, res)
   }
   
-  const handler = (req, res) => {
-    const d = new Date()
-    res.end(d.toString())
-  }
 
-  app.use(allowCors(handler))
+  app.use(allowCors)
 
   app.useGlobalPipes(new ValidationPipe());
 
