@@ -45,13 +45,11 @@ export class DespesaContoller {
 
     @Post("listar-periodo-anual")
     async listarPorPeriodoAnual(@Body() dados) {
-        console.log(dados)
         return this.despesaService.getDespesasNoPeriodoAnual(dados.usuarioId, dados.data_inicial, dados.data_final)
     }
 
     @Post("listar-periodo/:id")
     async listarPorPeriodo(@Param("id") idUser:number, @Body() paginacaoDTO: DespesaPaginacaoDTO) {
-        console.log(paginacaoDTO)
         return this.despesaService.getDespesasPeriodoPaginacao(idUser, paginacaoDTO)
     }
 
@@ -62,7 +60,6 @@ export class DespesaContoller {
 
     @Post("despesas-tipo/:id")
     async falmengo(@Param("id") idUser : number, @Body() periodo: DespesasDatasDTO) {
-        console.log(periodo)
         return this.despesaService.getValorTotalDespesasPorTipo(idUser,  periodo)
     }
 
@@ -74,7 +71,6 @@ export class DespesaContoller {
 
     @Post('listagem-personalizada/:id')
     async listagemPersonalizada(@Param('id') idUser: number, @Body() despesaDTO: DespesaPersonalizadaDTO){
-        console.log(despesaDTO)
         return this.despesaService.getDespesasTipoPersonalizada(idUser, despesaDTO)
     }
 }

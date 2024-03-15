@@ -23,7 +23,6 @@ export class UsuarioController {
   @IsPublic()
   @Post()
   cadastrar(@Body() usuario : UsuarioCadsatroDto): Promise<Usuario>{
-    console.log(usuario)
     return this.usuarioService.cadastrar(usuario)
   }
 

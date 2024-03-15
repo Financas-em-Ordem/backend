@@ -1,9 +1,8 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from './usuario.entity';
 import { UsuarioCadsatroDto } from './dto/usuario.cadastro.dto';
-//import { UsarioSessaoDto } from './dto/usuario.sessao.dto';
 import * as bcript from 'bcrypt'
 
 @Injectable()
@@ -30,14 +29,6 @@ export class UsuarioService {
             novoUsuario.salario = usuario.salario
             novoUsuario.cpf = usuario.cpf
 
-
-            /*
-            "email": "augustoabreu.202@gmail.com",
-            "nome_completo": "Augusto Ferreira de Abreu",
-            "data_nascimento": "18//08/2003",
-            "cpf": "069.404.051-78",
-            "senha": "AUGUSTOf@069"
-            */
             this.usuarioRepository.save({
                 ...novoUsuario,
                 senha: await bcript.hash(usuario.senha, 10)
@@ -48,7 +39,8 @@ export class UsuarioService {
             }
         }
 
-        throw new Error("Usuário já existe. Tente um email ou cpf diferentes")
+        throw new BadRequestException('Erro ao cadastrar', { cause: new Error(), description: 'Usuário já existe. Tente um email ou cpf diferentes' })
+
     }
 
     cadastrarVariosUsers(usuarios: UsuarioCadsatroDto[]) {
@@ -63,14 +55,6 @@ export class UsuarioService {
                 novoUsuario.salario = usuario.salario
                 novoUsuario.cpf = usuario.cpf
 
-
-                /*
-                "email": "augustoabreu.202@gmail.com",
-                "nome_completo": "Augusto Ferreira de Abreu",
-                "data_nascimento": "18//08/2003",
-                "cpf": "069.404.051-78",
-                "senha": "AUGUSTOf@069"
-                */
                 this.usuarioRepository.save({
                     ...novoUsuario,
                     senha: await bcript.hash(usuario.senha, 10)
@@ -116,7 +100,7 @@ export class UsuarioService {
             }
         }
 
-        throw new Error("Usuário nao encontrado")
+        throw new BadRequestException('Erro ao encontrar usuario', { cause: new Error(), description: 'Usuário nao encontrado' })
 
     }
 

@@ -11,7 +11,6 @@ export class AuthController {
     @UsePipes(ValidationPipe)
     @Post('login')
     async login(@Request() req){
-       console.log(req.body)
         return await this.authService.login(req.body.email, req.body.senha)
     }
 }
