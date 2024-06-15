@@ -11,7 +11,7 @@ export class TipoDespesaContoller{
 
     @Get("listar")
     async listar(): Promise<TipoDespesa[]>{
-        return this.tipoDespesaService.listar();
+        return await this.tipoDespesaService.listar();
     }
     @IsPublic()
     @Post()

@@ -215,7 +215,7 @@ export class DespesaService {
         skip: (despesaDTO.pagina - 1) * despesaDTO.itens_pagina,
         take: despesaDTO.itens_pagina,
         order: {
-          data: 'DESC'
+          data: 'ASC'
         }
       })
 
