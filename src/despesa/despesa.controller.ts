@@ -72,6 +72,5 @@ export class DespesaContoller {
     @Post('listagem-personalizada/:id')
     async listagemPersonalizada(@Param('id') idUser: number, @Body() despesaDTO: DespesaPersonalizadaDTO){
         return  await this.despesaService.getDespesasTipoPersonalizada(idUser, despesaDTO)
-        //return console.log({data: despesaDTO, id: idUser})
     }
 }
