@@ -1,40 +1,28 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, Request} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, Request, UseGuards } from "@nestjs/common";
 import { UsuarioService } from "./usuario.service";
 import { Usuario } from "./usuario.entity";
 import { UsuarioCadsatroDto } from "./dto/usuario.cadastro.dto";
 import { UsarioSessaoDto } from "./dto/usuario.sessao.dto";
+import { HasRoles } from "src/auth/decorators/roles.decorator";
+import { Role } from "src/auth/roles.enum";
+import { RolesGuard } from "src/auth/guard/roles-auth.guard";
 import { IsPublic } from "src/auth/decorators/is-public.decorator";
+
 
 @Controller('usuario')
 export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService){}
-
-  @Get('listar')
-  listar(): Promise<Usuario[]> {
-    return this.usuarioService.listar();
-  }
-
-  @IsPublic()
-  @Post('teste')
-  procurar(@Request() req){
-    return this.usuarioService.encontrarUsuarioEmailCPF(req.body.email, req.body.cpf)
-  }
+  constructor(private readonly usuarioService: UsuarioService) { }
 
   @IsPublic()
   @Post()
-  cadastrar(@Body() usuario : UsuarioCadsatroDto): Promise<Usuario>{
-    console.log(usuario)
+  cadastrar(@Body() usuario: UsuarioCadsatroDto): Promise<Usuario> {
     return this.usuarioService.cadastrar(usuario)
   }
 
-  @IsPublic()
-  @Post('varios')
-  cadastrarVarios(@Body() usuarios : UsuarioCadsatroDto[]){
-    return this.usuarioService.cadastrarVariosUsers(usuarios)
-  }
-
+  @HasRoles(Role.Admin, Role.User)
+  @UseGuards(RolesGuard)
   @Get('me')
-  me(@Req() req){
-    return req.user
+  async me(@Req() req) {
+    return await req.user
   }
 }

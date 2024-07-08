@@ -1,80 +1,67 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common";
 import { Despesa } from "./despesa.entity";
 import { DespesaService } from "./despesa.service";
 import { DespesaDto } from "./dto/despesa.dto";
-import { DespesaPaginacaoDTO } from "./dto/despesa-paginacao.dto";
 import { DespesaEdicaoDto } from "./dto/despesa-edicao.dto";
-import { IsPublic } from "src/auth/decorators/is-public.decorator";
-import { DespesaTipoPaginacaoDTO } from "./dto/despesa-tipo-paginacao.dto";
-import { DespesasDatasDTO } from "./dto/despesas-datas-dto";
+
 import { DespesaPersonalizadaDTO } from "./dto/despesa-personalizada.dto";
+import { Role } from "src/auth/roles.enum";
+import { RolesGuard } from "src/auth/guard/roles-auth.guard";
+import { HasRoles } from "src/auth/decorators/roles.decorator";
 
 @Controller('despesa')
+@HasRoles(Role.Admin, Role.User)
+@UseGuards(RolesGuard)
 export class DespesaContoller {
     constructor(private readonly despesaService: DespesaService) { }
 
     @Get('listar')
     async listar(): Promise<Despesa[]> {
-        return this.despesaService.findAll()
+        return await this.despesaService.findAll()
     }
 
-    @Get('usuario/:id')
-    async listarPorUsuario(@Param("id") id: number): Promise<Despesa[]> {
-        return this.despesaService.listarDespesasUsuario(id)
+    @Get('usuario')
+    async listarPorUsuario(@Request() req): Promise<Despesa[]> {
+        return await this.despesaService.listarDespesasUsuario(req.user.id)
     }
 
     @Post('salvar')
     async salvarDespesa(@Body() despesa: DespesaDto): Promise<Despesa> {
-
-        return this.despesaService.salvarDespesa(despesa);
+        return await this.despesaService.salvarDespesa(despesa);
     }
 
-    @Post('salvu98jik ')
-    async salvarVariasDespesas(@Body() despesas: DespesaDto[]) {
-        return this.despesaService.salvarVarias(despesas)
-    }
     @Delete("deletar/:id")
     async deletarDespesa(@Param("id") id: number): Promise<string> {
-        return this.despesaService.deletarDespesa(id);
+        return await this.despesaService.deletarDespesa(id);
     }
 
     @Patch("atualizar")
-    async atualizarDespesa(@Body() despesa: DespesaEdicaoDto) {
-        return this.despesaService.atualizarDespesa(despesa)
+    async atualizarDespesa(@Request() req: any, @Body() despesa: DespesaEdicaoDto) {
+        return await this.despesaService.atualizarDespesa(despesa, req.user.id)
+    }
+    
+    @Get("listar-mes-atual/:pagina")
+    async listarPorPeriodo(@Param('pagina') pagina : number, @Request() req: any) {
+        return await this.despesaService.getDespesasDoMes(req.user.id, pagina)
     }
 
-    @Post("listar-periodo-anual")
-    async listarPorPeriodoAnual(@Body() dados) {
-        console.log(dados)
-        return this.despesaService.getDespesasNoPeriodoAnual(dados.usuarioId, dados.data_inicial, dados.data_final)
+    @Get("listar-dez-ultimas")
+    async listarDezUltimas(@Request() req: any): Promise<Despesa[]> {
+        return await this.despesaService.listarUltimasDezDespesas(req.user.id);
     }
 
-    @Post("listar-periodo/:id")
-    async listarPorPeriodo(@Param("id") idUser:number, @Body() paginacaoDTO: DespesaPaginacaoDTO) {
-        console.log(paginacaoDTO)
-        return this.despesaService.getDespesasPeriodoPaginacao(idUser, paginacaoDTO)
+    @Get("despesas-tipo")
+    async getValorTotalDespesasPorTipo(@Request() req: any) {
+        return await this.despesaService.getValorTotalDespesasPorTipo(req.user.id)
     }
 
-    @Get("listar-dez-ultimas/:id")
-    async listarDezUltimas(@Param("id") id: number): Promise<Despesa[]> {
-        return this.despesaService.listarUltimasDezDespesas(id);
+    @Get('listar-tipo/:id')
+    async listarTipo(@Param('id') tipoID: number, @Request() req: any) {
+        return await this.despesaService.getDespesasTipo(req.user.id, tipoID)
     }
 
-    @Post("despesas-tipo/:id")
-    async falmengo(@Param("id") idUser : number, @Body() periodo: DespesasDatasDTO) {
-        console.log(periodo)
-        return this.despesaService.getValorTotalDespesasPorTipo(idUser,  periodo)
-    }
-
-    @Post('listar-tipo/:id')
-    async listarTipo(@Param("id") id : number, @Body() paginacaoDTO: DespesaTipoPaginacaoDTO){
-
-        return this.despesaService.getDespesasTipo(id, paginacaoDTO)
-    }
-
-    @Post('listagem-personalizada/:id')
-    async listagemPersonalizada(@Param('id') idUser: number, @Body() despesaDTO: DespesaPersonalizadaDTO){
-        console.log(despesaDTO)
-        return this.despesaService.getDespesasTipoPersonalizada(idUser, despesaDTO)
+    @Get('listagem-personalizada')
+    async listagemPersonalizada(@Query() data: DespesaPersonalizadaDTO, @Request() req: any) {
+        return await this.despesaService.getDespesasTipoPersonalizada(req.user.id, data)
     }
 }

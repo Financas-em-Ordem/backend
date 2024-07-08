@@ -1,3 +1,5 @@
+import { Exclude } from 'class-transformer';
+import { Role } from 'src/auth/roles.enum';
 import { Despesa } from 'src/despesa/despesa.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, JoinTable, OneToMany } from 'typeorm';
 
@@ -12,9 +14,6 @@ export class Usuario {
     @Column({ length: 255 })
     nome_completo: string;
 
-    @Column()
-    data_nascimento: string
-
     @Column({length: 14})
     cpf: string
 
@@ -24,6 +23,10 @@ export class Usuario {
     @Column()
     senha: string
 
+    @Column({type: 'enum', enum: Role})
+    roles: Role
+
     @OneToMany(() => Despesa, (despesa) => despesa.usuario)
     despesas: Despesa[]
+    
 }
