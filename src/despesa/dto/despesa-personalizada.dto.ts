@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import { IsArray, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class DespesaPersonalizadaDTO{
@@ -15,9 +16,11 @@ export class DespesaPersonalizadaDTO{
 
     @IsNotEmpty({message: "O índice da paginaçao nao pode estar vazio"})
     @IsNumber()
+    @Transform(pagina => parseInt(pagina.value))
     pagina: number;
 
     @IsNotEmpty({message: "A quantidade de itens por página nao pode estar vazia"})
     @IsNumber()
+    @Transform(itens_pagina => parseInt(itens_pagina.value))
     itens_pagina: number;
 }

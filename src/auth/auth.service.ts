@@ -5,25 +5,16 @@ import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private readonly usuarioService: UsuarioService,
-        private readonly jwtService: JwtService
-    ) { }
+  constructor(
+    private readonly usuarioService: UsuarioService,
+    private readonly jwtService: JwtService
+  ) { }
 
-    async login(email: string, senha: string) {
-        const usuario = await this.usuarioService.encontrarUsuario(email);
+  async validateUser(email: string, senha: string): Promise<any> {
+    const user = await this.usuarioService.encontrarUsuario(email);
 
-        if (usuario) {
-            const validaSenha = await bcrypt.compare(senha, usuario.senha);
+    if (user && await bcrypt.compare(senha, user.senha)) return {access_token: this.jwtService.sign({...user})}
 
-            if (validaSenha) {
-                return {
-                    access_token: this.jwtService.sign({ id: usuario.id, email: usuario.email, nome_completo: usuario.nome_completo, salario: usuario.salario })
-                }
-            
-            }
-        }
-        throw new BadRequestException('Erro ao logar', { cause: new Error(), description: 'Email ou senha nao conferem' })
-
-    }
+    throw new Error("erro ao logar, senha ou email estão incorretos")
+  }
 }
