@@ -1,9 +1,8 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from './usuario.entity';
 import { UsuarioCadsatroDto } from './dto/usuario.cadastro.dto';
-//import { UsarioSessaoDto } from './dto/usuario.sessao.dto';
 import * as bcript from 'bcrypt'
 import { Role } from 'src/auth/roles.enum';
 
@@ -25,7 +24,6 @@ export class UsuarioService {
             novoUsuario.cpf = usuario.cpf
             novoUsuario.roles = Role.User
 
-
             this.usuarioRepository.save({
                 ...novoUsuario,
                 senha: await bcript.hash(usuario.senha, 10)
@@ -37,7 +35,8 @@ export class UsuarioService {
             }
         }
 
-        throw new Error("Usuário já existe. Tente um email ou cpf diferentes")
+        throw new BadRequestException('Erro ao cadastrar', { cause: new Error(), description: 'Usuário já existe. Tente um email ou cpf diferentes' })
+
     }
 
     cadastrarVariosUsers(usuarios: UsuarioCadsatroDto[]) {
