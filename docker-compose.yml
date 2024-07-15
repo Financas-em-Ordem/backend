@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  
+  api-whatsapp:
+    container_name: financas-em-ordem
+    env_file:
+      - .env
+    image: vshub.vstec.net/financas-em-ordem/financas-em-ordem:1.0.3
+    ports:
+      - "127.0.0.1:3030:3000"
+    volumes:
+      - ./uploads:/app/uploads 
