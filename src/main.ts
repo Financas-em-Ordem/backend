@@ -12,6 +12,9 @@ async function bootstrap() {
     .setDescription('Documentação da API do projeto Finanças em Ordem	')
     .setVersion('1.0')
     .addTag('API')
+    .addTag('usuario')
+    .addTag('despesa')
+    .addTag('tipo despesa')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

@@ -7,8 +7,9 @@ import { HasRoles } from "src/auth/decorators/roles.decorator";
 import { Role } from "src/auth/roles.enum";
 import { RolesGuard } from "src/auth/guard/roles-auth.guard";
 import { IsPublic } from "src/auth/decorators/is-public.decorator";
+import { ApiTags } from "@nestjs/swagger";
 
-
+@ApiTags('usuario')
 @Controller('usuario')
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) { }

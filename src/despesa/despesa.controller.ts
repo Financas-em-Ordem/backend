@@ -8,7 +8,9 @@ import { DespesaPersonalizadaDTO } from "./dto/despesa-personalizada.dto";
 import { Role } from "src/auth/roles.enum";
 import { RolesGuard } from "src/auth/guard/roles-auth.guard";
 import { HasRoles } from "src/auth/decorators/roles.decorator";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('despesa')
 @Controller('despesa')
 @HasRoles(Role.Admin, Role.User)
 @UseGuards(RolesGuard)

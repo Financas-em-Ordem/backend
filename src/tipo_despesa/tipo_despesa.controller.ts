@@ -7,7 +7,9 @@ import { TipoDespesaEdicaoDto } from "./dto/tipo_despesa_editar.dto";
 import { HasRoles } from "src/auth/decorators/roles.decorator";
 import { Role } from "src/auth/roles.enum";
 import { RolesGuard } from "src/auth/guard/roles-auth.guard";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('tipo despesa')
 @Controller('tipo_despesa')
 @HasRoles(Role.Admin)
 @UseGuards(RolesGuard)
